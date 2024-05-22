@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="mh.css">
+        <link rel="icon" href="note.png">
+        <title>Melody Harbor</title>
+    </head>
+    <body>
+        <div class="header">
+            <div class="MH">
+                <img src="note.png">
+                <h1>Melody Harbor</h1>
+                <img src="note.png">
+            </div>
+            <div>
+                [ <a href="index.html">Home</a>
+                | <a href="labels.html">Record Labels</a>
+                | <a href="artists.html">Artists</a>
+                | <a href="albums.html">Albums</a>
+                | <a href="songs.html">Songs</a>
+                ]
+            </div>
+        </div>
+        <br>
+        <hr>
+        <h2>Home</h2>
+        <p>
+            There is currently no simple, centralized, and customizable way for music listeners to keep track of and gain more insight into the music that they listen to. 
+            The average person spends 20 hours listening to music each week. 
+            These sorts of listening hours can mean that listeners may be engaging with hundreds or thousands of songs over the course of a few months without any customizable means of keeping track of their listening habits. 
+            Streaming services provide ways to organize music into playlists and play them but MelodyHarbor wants to add a more analytical method of organization. 
+            Users will be able to search for songs categorized by different genres, music theory concepts, and lyrics. 
+            Some unique features include key signatures, instruments, vocal ranges, and chord progressions which allow musicians to have a more selective search based on their interests. 
+            MelodyHarbor will also group songs into albums and record information on several record labels and artists.
+        </p>
+        <br>
+        <h2>Database Outline</h2>
+        <table class="tables">
+            <thead>
+                <th>Tables</th>
+                <th>Description</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Record Labels</td>
+                    <td>Contains data regarding Record Labels. Record Labels can have many Artists.</td>
+                </tr>
+                <tr>
+                    <td>Artists</td>
+                    <td>Contains data regarding Artists. All artists are part of a Record Label, they can have many albums, and can appear on many songs.</td>
+                </tr>
+                <tr>
+                    <td>Albums</td>
+                    <td>Contains data regarding Albums. All albums belong to one artist and albums can contain many songs.</td>
+                </tr>
+                <tr>
+                    <td>Songs</td>
+                    <td>Contains a complex range of data regarding Songs. All songs appear on one album and must belong to one or many artists.</td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>

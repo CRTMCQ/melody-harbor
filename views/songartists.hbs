@@ -1,0 +1,16 @@
+<h2>SongArtists Relationship</h2>
+<table id="songartists-table">
+    <thead>
+        <th>Song</th>
+        <th>Artist</th>
+    </thead>
+    {{!-- Body section --}}
+    <tbody>
+        {{#each data}}
+        <tr>
+            <td>{{this.songID}}</td>
+            <td>{{this.artistID}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

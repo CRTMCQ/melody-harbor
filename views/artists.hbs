@@ -1,0 +1,55 @@
+<h2>Artists</h2>
+<table id="artist-table">
+    <thead>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Monthly Listeners</th>
+        <th>City Of Origin</th>
+        <th>Label</th>
+        <th>Delete</th>
+    </thead>
+    <tbody>
+        {{#each data}}
+        <tr data-value={{this.artistID}}>
+            <td>{{this.artistID}}</td>
+            <td>{{this.name}}</td>
+            <td>{{this.listenerCt}}</td>
+            <td>{{this.cityOfOrigin}}</td>
+            <td>{{this.labelID}}</td>
+            <td><button onclick="deleteArtist({{this.artistID}})">Delete</button></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+<script src="./js/delete_artist.js"></script>
+<br>
+<div class="form">
+    <h3>Add Artist</h3>
+    <form id="add-artist-form" method="POST" action="/add-artist-form">
+        <table class="form">
+            <tr>
+                <td>Name:</td>
+                <td><input type="text" name="input-name"></td>
+            </tr>
+            <tr>
+                <td>Monthly Listeners:</td>
+                <td><input type="number" name="input-listenerCt"></td>
+            </tr>
+            <tr>
+                <td>City Of Origin:</td>
+                <td><input type="text" name="input-cityOfOrigin"></td>
+            </tr>
+            <tr>
+                <td>Label:</td>
+                <td><select name="input-label" id="input-label-ajax">
+                    <option value="">Select a Label</option>
+                    {{#each labels}}
+                    <option value="{{this.labelID}}">{{this.name}}</option>
+                    {{/each}}
+                </select></td>
+            </tr>
+        </table>
+        <br>
+        <input type="submit">
+    </form>
+</div>

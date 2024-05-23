@@ -1,0 +1,49 @@
+<h2>Albums</h2>
+<table id="albums-table">
+    <thead>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Genre</th>
+        <th>Artist</th>
+        <th>Delete</th>
+    </thead>
+    <tbody>
+        {{#each data}}
+        <tr data-value={{this.albumID}}>
+            <td>{{this.albumID}}</td>
+            <td>{{this.title}}</td>
+            <td>{{this.genre}}</td>
+            <td>{{this.artistID}}</td>
+            <td><button onclick="deleteAlbum({{this.albumID}})">Delete</button></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+<script src="./js/delete_album.js"></script>
+<br>
+<div class="form">
+    <h3>Add Album</h3>
+    <form id="add-album-form" method="POST" action="/add-album-form">
+        <table class="form">
+            <tr>
+                <td>Title:</td>
+                <td><input type="text" name="input-title"></td>
+            </tr>
+            <tr>
+                <td>Genre:</td>
+                <td><input type="text" name="input-genre"></td>
+            </tr>
+            <tr>
+                <td>Artist:</td>
+                <td><select name="input-artist" id="input-artist-ajax">
+                    <option value="">Select an Artist</option>
+                    {{#each artists}}
+                    <option value="{{this.artistID}}">{{this.name}}</option>
+                    {{/each}}
+                </select></td>
+            </tr>
+        </table>
+        <br>
+        <input type="submit">
+    </form>
+</div>

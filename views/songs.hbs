@@ -1,0 +1,179 @@
+<h2>Songs</h2>
+<table id="song-table">
+    {{!-- Header section --}}
+    <thead>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Album</th>
+        <th>Artist(s)</th>
+        <th>Stream Count</th>
+        <th>Genre</th>
+        <th>Key Signature</th>
+        <th>Chord Progression(s)</th>
+        <th>Vocal Range</th>
+        <th>Lyrics</th>
+        <th>Delete</th>
+    </thead>
+
+    {{!-- Body section --}}
+    <tbody>
+
+        {{!-- For each row, print the id, fname, lname, homeworld and age, in order --}}
+        {{#each data}}
+        <tr data-value={{this.songID}}>
+            <td>{{this.songID}}</td>
+            <td>{{this.name}}</td>
+            <td>{{this.albumID}}</td>
+            <td>
+                {{#each artists}}
+                    <table>
+                        <tr><td>{{this.name}}</td></tr>
+                    </table>
+                {{/each}}
+            </td>
+            <td>{{this.streamCt}}</td>
+            <td>{{this.genre}}</td>
+            <td>{{this.keySignature}}</td>
+            <td>{{this.chordProgression}}</td>
+            <td>{{this.lowRange}}-{{this.highRange}}</td>
+            <td><div class="lyrics">{{this.lyrics}}</div></td>
+            <td><button onclick="deleteSong({{this.songID}})">Delete</button></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+<script src="./js/delete_song.js"></script>
+<br>
+
+<div class="forms">
+    <div class="form">
+        <h3>Add Song</h3>
+        <form id="add-song-form" method="POST" action="/add-song-form">
+            <table class="form">
+                <tr>
+                    <td>Title:</td>
+                    <td><input type="text" name="input-name"></td>
+                </tr>
+                <tr>
+                    <td>Album:</td>
+                    <td><select name="input-album" id="input-album-ajax">
+                        <option value="">Select an Album</option>
+                        {{#each albums}}
+                        <option value="{{this.albumID}}">{{this.title}}</option>
+                        {{/each}}
+                    </select></td>
+                </tr>
+                <tr>
+                    <td>Artist(s):</td>
+                    <td><select name="input-artist" id="input-artist-ajax">
+                        <option value="">Select an Artist</option>
+                        {{#each artists}}
+                        <option value="{{this.artistID}}">{{this.name}}</option>
+                        {{/each}}
+                    </select></td>
+                    <td><input type="button" value="Add Artist"></td>
+                </tr>
+                <tr>
+                    <td>Strean Count:</td>
+                    <td><input type="number" name="input-streamCt"></td>
+                </tr>
+                <tr>
+                    <td>Genre:</td>
+                    <td><input type="text" name="input-genre"></td>
+                </tr>
+                <tr>
+                    <td>Key Signature:</td>
+                    <td><input type="text" name="input-keySignature"></td>
+                </tr>
+                <tr>
+                    <td>Chord Progression(s):</td>
+                    <td><textarea name="input-chordProgression"></textarea></td>
+                </tr>
+                <tr>
+                    <td>Low Vocal Range:</td>
+                    <td><input type="number" name="input-lowRange"></td>
+                </tr>
+                <tr>
+                    <td>High Vocal Range:</td>
+                    <td><input type="number" name="input-highRange"></td>
+                </tr>
+                <tr>
+                    <td>Lyrics:</td>
+                    <td><textarea name="input-lyrics"></textarea></td>
+                </tr>
+            </table>
+            <br>
+            <input type="submit">
+        </form>
+    </div>
+    <div class="form" style="margin-left:10px">
+        <h3>Update Song</h3>
+        <form id="update-song-form-ajax">
+            <table class="form">
+                <tr>
+                    <td style="font-weight:bold">Select Song:</td>
+                    <td><select id="update-song">
+                        <option value="">Select a Song</option>
+                        {{#each data}}
+                        <option value="{{this.songID}}">{{this.name}}</option>
+                        {{/each}}
+                    </select></td>
+                </tr>
+                <tr>
+                    <td>Title:</td>
+                    <td><input type="text" id="update-title"></td>
+                </tr>
+                <tr>
+                    <td>Album:</td>
+                    <td><select id="update-album">
+                        <option value="">Select an Album</option>
+                        {{#each albums}}
+                        <option value="{{this.albumID}}">{{this.title}}</option>
+                        {{/each}}
+                    </select></td>
+                </tr>
+                <tr>
+                    <td>Artist(s):</td>
+                    <td><select id="update-artist">
+                        <option value="">Select an Artist</option>
+                        {{#each artists}}
+                        <option value="{{this.artistID}}">{{this.name}}</option>
+                        {{/each}}
+                    </select></td>
+                    <td><input type="button" value="Add Artist"></td>
+                </tr> 
+                <tr>
+                    <td>Stream Count:</td>
+                    <td><input type="number" id="update-streamCt"></td>
+                </tr>
+                <tr>
+                    <td>Genre:</td>
+                    <td><input type="text" id="update-genre"></td>
+                </tr>
+                <tr>
+                    <td>Key Signature:</td>
+                    <td><input type="text" id="update-keySignature"></td>
+                </tr>
+                <tr>
+                    <td>Chord Progression(s):</td>
+                    <td><textarea id="update-chordProgression"></textarea></td>
+                </tr>
+                <tr>
+                    <td>Low Vocal Range:</td>
+                    <td><input type="number" id="update-lowRange"></td>
+                </tr>
+                <tr>
+                    <td>High Vocal Range:</td>
+                    <td><input type="number" id="update-highRange"></td>
+                </tr>
+                <tr>
+                    <td>Lyrics:</td>
+                    <td><textarea id="update-lyrics"></textarea></td>
+                </tr>
+            </table>
+            <br>
+            <input type="submit">
+            <script src="./js/update_song.js"></script>
+        </form>
+    </div>
+</div>

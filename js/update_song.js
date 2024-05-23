@@ -8,9 +8,6 @@ updateSongForm.addEventListener("submit", function (e) {
     e.preventDefault();
 
     // Get form fields we need to get data from
-    let inputFullName = document.getElementById("mySelect");
-    let inputHomeworld = document.getElementById("input-homeworld-update");
-
     let inputSong = document.getElementById("songSelect");
     let inputTitle = document.getElementById("update-title");
     let inputAlbum = document.getElementById("update-albumSelect");
@@ -88,18 +85,25 @@ function updateRow(data, songID){
             // Get the location of the row where we found the matching songID
             let updateRowIndex = table.getElementsByTagName("tr")[i];
 
-            // Get all tds
-            let td = updateRowIndex.getElementsByTagName("td");
+            // Get all respective tds
+            let td_title = updateRowIndex.getElementsByTagName("td")[1];
+            let td_album = updateRowIndex.getElementsByTagName("td")[2];
+            let td_streams = updateRowIndex.getElementsByTagName("td")[4];
+            let td_genre = updateRowIndex.getElementsByTagName("td")[5];
+            let td_key = updateRowIndex.getElementsByTagName("td")[6];
+            let td_chord = updateRowIndex.getElementsByTagName("td")[7];
+            let td_range = updateRowIndex.getElementsByTagName("td")[8];
+            let td_lyrics = updateRowIndex.getElementsByTagName("td")[9];
 
             // Update the values
-            td[1].innerHTML = parsedData[0].name; 
-            td[2].innerHTML = parsedData[0].albumID; 
-            td[4].innerHTML = parsedData[0].streamCt;
-            td[5].innerHTML = parsedData[0].genre;
-            td[6].innerHTML = parsedData[0].keySignature;
-            td[7].innerHTML = parsedData[0].chordProgression;
-            td[8].innerHTML = parsedData[0].lowRange + "-" + parsedData[0].highRange;
-            td[9].innerHTML = parsedData[0].lyrics;
+            td_title.innerHTML = parsedData[0].name; 
+            td_album.innerHTML = parsedData[0].albumID; 
+            td_streams.innerHTML = parsedData[0].streamCt;
+            td_genre.innerHTML = parsedData[0].genre;
+            td_key.innerHTML = parsedData[0].keySignature;
+            td_chord.innerHTML = parsedData[0].chordProgression;
+            td_range.innerHTML = parsedData[0].lowRange + "-" + parsedData[0].highRange;
+            td_lyrics.innerHTML = parsedData[0].lyrics;
        }
     }
 }

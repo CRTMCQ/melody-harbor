@@ -28,7 +28,7 @@ function deleteSong(ID) {
 
 function deleteRow(ID){
 
-    let table = document.getElementById("people-table");
+    let table = document.getElementById("song-table");
     for (let i = 0, row; row = table.rows[i]; i++) {
        //iterate through rows
        //rows would be accessed using the "row" variable assigned in the for loop

@@ -1,5 +1,12 @@
 // App.js
 
+// Citation for the following code: app.js, db-connector.js, views/, public/js/
+// Date: 12/22/2024
+// Date: 5/23/2024
+// Adapted from: CS340 nodejs-starter-app 
+// The starter app code was used as a basis for development, and adapted to better fit the melody-harbor database
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app
+
 /*
     SETUP
 */

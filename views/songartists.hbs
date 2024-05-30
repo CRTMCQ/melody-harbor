@@ -8,10 +8,10 @@
     {{!-- Body section --}}
     <tbody>
         {{#each data}}
-        <tr data-value={{this.saID}}>
+        <tr data-value={{this.songArtistsID}}>
             <td>{{this.songID}}</td>
             <td>{{this.artistID}}</td>
-            <td><button onclick="deleteSongArtist({{this.saID}})">Delete</button></td>
+            <td><button onclick="deleteSongArtist({{this.songArtistsID}})">Delete</button></td>
         </tr>
         {{/each}}
     </tbody>

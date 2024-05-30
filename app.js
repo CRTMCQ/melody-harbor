@@ -48,7 +48,7 @@ app.post('/add-label-form', function(req, res)
 
         if (data['input-name'] && data['input-location'])
             // Create the query and run it on the database
-            query1 = `INSERT INTO RecordLabels (name, address) VALUES ('${data['input-name']}','${data['input-location']}')`;
+            query1 = `INSERT INTO RecordLabels (name, location) VALUES ('${data['input-name']}','${data['input-location']}')`;
             db.pool.query(query1, function(error, rows, fields){
 
                 // Check to see if there was an error
@@ -504,16 +504,15 @@ app.post('/add-songartist-form', function(req, res)
 
 app.delete('/delete-songartist-ajax/', function(req,res,next){
     let data = req.body;
-    let saID = parseInt(data.saID);
-    let deleteSongArtists = `DELETE FROM SongArtists WHERE saID = ?`;
+    let songArtistsID = parseInt(data.songArtistsID);
+    let deleteSongArtists = `DELETE FROM SongArtists WHERE songArtistsID = ?`;
        
-        db.pool.query(deleteSongArtists, [saID], function(error, rows, fields){
+        db.pool.query(deleteSongArtists, [songArtistsID], function(error, rows, fields){
             if (error) {
                 // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
                 console.log(error);
                 res.sendStatus(400);
             }
-
             else
             {
                 // Run the second query

@@ -20,16 +20,6 @@
                 </select></td>
             </tr>
             <tr>
-                <td>Artist(s):</td>
-                <td><select id="update-artist">
-                    <option value="">Select an Artist</option>
-                    {{#each artists}}
-                    <option value="{{this.artistID}}">{{this.name}}</option>
-                    {{/each}}
-                </select></td>
-                <td><input type="button" value="Add Artist"></td>
-            </tr> 
-            <tr>
                 <td>Stream Count:</td>
                 <td><input type="number" id="update-streamCt" value="{{#each data}}{{this.streamCt}}{{/each}}"></td>
             </tr>

@@ -1,7 +1,7 @@
 function deleteSongArtist(ID) {
     // Put our data we want to send in a javascript object
     let data = {
-        saID: ID
+        songArtistsID: ID
     };
 
     // Setup our AJAX request

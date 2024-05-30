@@ -1,16 +1,11 @@
-// Citation for the following code: app.js, db-connector.js, views/, public/js/
-// Date: 5/23/2024
-// Adapted from: CS340 nodejs-starter-app 
-// The starter app code was used as a basis for development, and adapted to better fit the melody-harbor database
-// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app
-
+// App.js
 
 /*
     SETUP
 */
 var express = require('express');   // We are using the express library for the web server
 var app     = express();            // We need to instantiate an express object to interact with the server in our code
-PORT        = 62305;                 // Set a port number at the top so it's easy to change in the future
+PORT        = 62304;                 // Set a port number at the top so it's easy to change in the future
 
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
@@ -63,7 +58,7 @@ app.post('/add-label-form', function(req, res)
                     console.log(error)
                     res.sendStatus(400);
                 }
-                // If there was no error, we redirect back to our root route, which automatically runs the SELECT * FROM RecordLabels and
+                // If there was no error, we redirect back to our root route, which automatically runs the SELECT * FROM bsg_people and
                 // presents it on the screen
                 else
                 {
@@ -115,7 +110,7 @@ app.get('/artists', function(req, res)
                     labelmap[id] = label["name"];
                 })
 
-                // Overwrite the labelID with the name of the label in the artists object
+                // Overwrite the homeworld ID with the name of the planet in the people object
                 artists = artists.map(artist => {
                     return Object.assign(artist, {labelID: labelmap[artist.labelID]})
                 })
@@ -263,7 +258,6 @@ app.get('/songs', function(req, res)
         let query1 = "SELECT * FROM Songs;";
         let query2 = "SELECT * FROM Albums;";
         let query3 = "SELECT * FROM Artists;";
-        let query4 = "SELECT * FROM SongArtists;";
 
         // Run the 1st query
         db.pool.query(query1, function(error, rows, fields){
@@ -288,18 +282,13 @@ app.get('/songs', function(req, res)
                 db.pool.query(query3, (error, rows, fields) => {
 
                     let artists = rows;
-
-                    db.pool.query(query4, (error, rows, fields) => {
-
-                        let songartists = rows;
     
-                        return res.render('songs', {data: songs, albums: albums, artists: artists});
-                    })
+                    return res.render('songs', {data: songs, albums: albums, artists: artists});
+
                 })
             })
         })
-    });                                                         
-
+    });   
 
 app.post('/add-song-form', function(req, res)
     {
@@ -374,40 +363,66 @@ app.delete('/delete-song-ajax/', function(req,res,next){
     }
 );
 
+/*
+    UPDATE SONGS ROUTES
+*/
+app.get('/updatesongs', function(req, res)
+    {  
+        let query1 = "SELECT * FROM Songs WHERE songID = ?;";
+        let query2 = "SELECT * FROM Albums;";
+        let query3 = "SELECT * FROM Artists;";
+        let query4 = "SELECT * FROM SongArtists;";
+
+        // Run the 1st query
+        db.pool.query(query1, [req.query.ID], function(error, rows, fields){
+            
+            let songs = rows;
+
+            // Run the second query
+            db.pool.query(query2, (error, rows, fields) => {
+                
+                let albums = rows; 
+
+                let albummap = {}
+                albums.map(album => {
+                    let id = parseInt(album.albumID, 10);
+                    albummap[id] = album["title"];
+                })
+
+                db.pool.query(query3, (error, rows, fields) => {
+
+                    let artists = rows;
+
+                    db.pool.query(query4, (error, rows, fields) => {
+
+                        let songartists = rows;
+    
+                        return res.render('updatesongs', {data: songs, albums: albums, artists: artists});
+                    })
+                })
+            })
+        })
+    });                   
+
+
 app.put('/put-song-ajax', function(req,res,next){
     let data = req.body;
     
-    let queryUpdateSong = `UPDATE Songs SET name = ?, streamCt = ?, genre = ?, keySignature = ?, chordProgression = ?, lowRange = ?, highRange = ?, albumID = ?, lyrics = ? WHERE songID = ?`;
-    let selectAlbums = "SELECT title FROM Albums WHERE albumID = ?;";
+    let queryUpdateSong = `UPDATE Songs SET name = ?, streamCt = ?, genre = ?, keySignature = ?, chordProgression = ?, lowRange = ?, highRange = ?, albumID = ?, lyrics = ? WHERE songID = ?;`;
 
     // Run the 1st query
     db.pool.query(queryUpdateSong, [data.name, data.streamCt, data.genre, data.keySignature, data.chordProgression, data.lowRange, data.highRange, data.albumID, data.lyrics, data.songID], function(error, rows, fields){
-        
+
         if (error) {
             // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
             console.log(error);
             res.sendStatus(400);
         }
-
-        // If there was no error, we run our second query and return that data so we can use it to update the people's
-        // table on the front-end
-        else
-        {
-            // Run the second query
-            db.pool.query(selectAlbums, [data.albumID], function(error, rows, fields) {
-                
-                album = rows[0].title;
-                data.albumID = album;
-
-                if (error) {
-                    console.log(error);
-                    res.sendStatus(400);
-                } else {
-                    res.send(data);
-                }
-            })
+        else {
+            res.sendStatus(200);
         }
-    })
+
+    });
 });
 
 
@@ -426,6 +441,7 @@ app.get('/songartists', function(req, res)
                     
             db.pool.query(query2, (error, rows, fields) => {
 
+                let savesongs = rows;
                 let songs = rows; 
 
                 let songmap = {}
@@ -440,6 +456,7 @@ app.get('/songartists', function(req, res)
 
                 db.pool.query(query3, (error, rows, fields) => {
 
+                    let saveartists = rows;
                     let artists = rows; 
     
                     let artistmap = {}
@@ -452,11 +469,59 @@ app.get('/songartists', function(req, res)
                         return Object.assign(songartist, {artistID: artistmap[songartist.artistID]})
                     })
     
-                    return res.render('songartists', {data: songartists});
+                    return res.render('songartists', {data: songartists, songs: savesongs, artists: saveartists});
                 })
             })
         })
-    });                                                         
+    });                  
+    
+    
+app.post('/add-songartist-form', function(req, res)
+{
+    // Capture the incoming data and parse it back to a JS object
+    let data = req.body;
+
+    // Capture NULL values
+
+    // Create the query and run it on the database
+    query1 = `INSERT INTO SongArtists (songID, artistID) VALUES ('${data['input-song']}', '${data['input-artist']}')`;
+
+    db.pool.query(query1, function(error, rows, fields){
+
+        // Check to see if there was an error
+        if (error) {
+
+            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+            console.log(error)
+            res.sendStatus(400);
+        }
+        else
+        {
+            res.redirect('/songartists');
+        }
+    })
+})
+
+app.delete('/delete-songartist-ajax/', function(req,res,next){
+    let data = req.body;
+    let saID = parseInt(data.saID);
+    let deleteSongArtists = `DELETE FROM SongArtists WHERE saID = ?`;
+       
+        db.pool.query(deleteSongArtists, [saID], function(error, rows, fields){
+            if (error) {
+                // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                console.log(error);
+                res.sendStatus(400);
+            }
+
+            else
+            {
+                // Run the second query
+                res.sendStatus(204);
+            }
+        })
+    }
+);
 
 
 /*

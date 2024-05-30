@@ -1,21 +1,7 @@
--- Group 111
--- Team members: Carter McQuigg, Brandon Nguyen
--- Project: MelodyHarbor
-
-
--- Setup to minimize import errors
-SET FOREIGN_KEY_CHECKS = 0;
-SET AUTOCOMMIT = 0;
-
-
-----------------------------------
--- Create Tables
-----------------------------------
-
 CREATE OR REPLACE Table RecordLabels (
 	labelID int NOT NULL AUTO_INCREMENT,
 	name varchar(50) NOT NULL,
-	location varchar(30),
+	address varchar(30),
 	PRIMARY KEY (labelID)
 );
 
@@ -27,7 +13,6 @@ CREATE OR REPLACE Table Artists (
 	labelID int,
 	PRIMARY KEY (artistID),
 	FOREIGN KEY (labelID) REFERENCES RecordLabels(labelID)
-	ON DELETE SET NULL
 );
 
 CREATE OR REPLACE Table Albums (
@@ -37,7 +22,6 @@ CREATE OR REPLACE Table Albums (
 	artistID int,
 	PRIMARY KEY (albumID),
 	FOREIGN KEY (artistID) REFERENCES Artists(artistID)
-	ON DELETE CASCADE
 );
 
 CREATE OR REPLACE Table Songs (
@@ -49,30 +33,22 @@ CREATE OR REPLACE Table Songs (
 	chordProgression varchar(30),
 	lowRange int,
 	highRange int,
+  lyrics text,
 	albumID int,
-  	lyrics text,
 	PRIMARY KEY (songID),
 	FOREIGN KEY (albumID) REFERENCES Albums(albumID)
-	ON DELETE SET NULL
 );
 
 CREATE OR REPLACE Table SongArtists (
-	songArtistsID int NOT NULL AUTO_INCREMENT,
+	saID int NOT NULL AUTO_INCREMENT,
 	songID int,
 	artistID int,
-	PRIMARY KEY (songArtistsID),
-	FOREIGN KEY (artistID) REFERENCES Artists(artistID)
-	ON DELETE CASCADE,
+	PRIMARY KEY (saID),
+	FOREIGN KEY (artistID) REFERENCES Artists(artistID),
 	FOREIGN KEY (songID) REFERENCES Songs(songID)
-	ON DELETE CASCADE
 );
 
-
-----------------------------------
--- Insert Example Data
-----------------------------------
-
-INSERT INTO RecordLabels (name, location)
+INSERT INTO RecordLabels (name, address)
 VALUES ('Independent','N/A'),
 ('Dreamville','New York City, New York'),
 ('pgLang','Los Angeles, California'),
@@ -111,9 +87,3 @@ VALUES ((SELECT songID FROM Songs WHERE name = 'No Role Modelz'),(SELECT artistI
 ((SElECT songID FROM Songs WHERE name = 'family ties'),(SELECT artistID FROM Artists WHERE name = 'Baby Keem')),
 ((SELECT songID FROM Songs WHERE name = 'Off Deez'),(SELECT artistID FROM Artists WHERE name = 'JID')),
 ((SELECT songID FROM Songs WHERE name = 'Off Deez'),(SELECT artistID FROM Artists WHERE name = 'J. Cole'));
-
-
-
--- Re-setting startup checks
-SET FOREIGN_KEY_CHECKS = 1;
-COMMIT;

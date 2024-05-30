@@ -10,7 +10,7 @@
 */
 var express = require('express');   // We are using the express library for the web server
 var app     = express();            // We need to instantiate an express object to interact with the server in our code
-PORT        = 62304;                 // Set a port number at the top so it's easy to change in the future
+PORT        = 62305;                 // Set a port number at the top so it's easy to change in the future
 
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
@@ -63,7 +63,7 @@ app.post('/add-label-form', function(req, res)
                     console.log(error)
                     res.sendStatus(400);
                 }
-                // If there was no error, we redirect back to our root route, which automatically runs the SELECT * FROM bsg_people and
+                // If there was no error, we redirect back to our root route, which automatically runs the SELECT * FROM RecordLabels and
                 // presents it on the screen
                 else
                 {
@@ -115,7 +115,7 @@ app.get('/artists', function(req, res)
                     labelmap[id] = label["name"];
                 })
 
-                // Overwrite the homeworld ID with the name of the planet in the people object
+                // Overwrite the labelID with the name of the label in the artists object
                 artists = artists.map(artist => {
                     return Object.assign(artist, {labelID: labelmap[artist.labelID]})
                 })
@@ -300,6 +300,7 @@ app.get('/songs', function(req, res)
         })
     });                                                         
 
+
 app.post('/add-song-form', function(req, res)
     {
         // Capture the incoming data and parse it back to a JS object
@@ -309,8 +310,8 @@ app.post('/add-song-form', function(req, res)
 
         // Create the query and run it on the database
         query1 = `INSERT INTO Songs (name, albumID, streamCt, genre, keySignature, chordProgression, lowRange, highRange, lyrics) VALUES ('${data['input-name']}', '${data['input-album']}', ${data['input-streamCt']}, '${data['input-genre']}', '${data['input-keySignature']}', '${data['input-chordProgression']}', ${data['input-lowRange']}, ${data['input-highRange']}, '${data['input-lyrics']}')`;
-        query2 = 'INSERT INTO SongArtists (songID, artistID) VALUES'
-        
+        query2 = `INSERT INTO SongArtists (songID, artistID) VALUES ((SELECT MAX(songID) FROM Songs), '${data['input-artist']}')`;
+
         db.pool.query(query1, function(error, rows, fields){
 
             // Check to see if there was an error
@@ -323,7 +324,21 @@ app.post('/add-song-form', function(req, res)
 
             else
             {
-                res.redirect('/songs');
+                db.pool.query(query2, function(error, rows, fields){
+
+                    // Check to see if there was an error
+                    if (error) {
+        
+                        // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                        console.log(error)
+                        res.sendStatus(400);
+                    }
+        
+                    else
+                    {
+                        res.redirect('/songs');
+                    }
+                })
             }
         })
     })
@@ -335,8 +350,7 @@ app.delete('/delete-song-ajax/', function(req,res,next){
     let deleteSongArtists = `DELETE FROM SongArtists WHERE songID = ?`;
     let deleteSongs= `DELETE FROM Songs WHERE songID = ?`;
        
-        // Run the 1st query
-        db.pool.query(deleteSongs, [songID], function(error, rows, fields){
+        db.pool.query(deleteSongArtists, [songID], function(error, rows, fields){
             if (error) {
                 // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
                 console.log(error);
@@ -346,7 +360,7 @@ app.delete('/delete-song-ajax/', function(req,res,next){
             else
             {
                 // Run the second query
-                db.pool.query(deleteSongArtists, [songID], function(error, rows, fields) {
+                db.pool.query(deleteSongs, [songID], function(error, rows, fields) {
 
                     if (error) {
                         console.log(error);
@@ -356,22 +370,12 @@ app.delete('/delete-song-ajax/', function(req,res,next){
                     }
                 })
             }
-    })});
+        })
+    }
+);
 
 app.put('/put-song-ajax', function(req,res,next){
     let data = req.body;
-
-    // songID: songVal,
-    // name: titleVal,
-    // streamCt: streamVal,
-    // genre: genreVal,
-    // keySignature: keyVal,
-    // chordProgression: chordVal,
-    // lowRange: lowVal,
-    // highRange: highVal,
-    // albumID: albumVal,
-    // lyrics: lyricsVal
-
     
     let queryUpdateSong = `UPDATE Songs SET name = ?, streamCt = ?, genre = ?, keySignature = ?, chordProgression = ?, lowRange = ?, highRange = ?, albumID = ?, lyrics = ? WHERE songID = ?`;
     let selectAlbums = "SELECT title FROM Albums WHERE albumID = ?;";
@@ -403,7 +407,8 @@ app.put('/put-song-ajax', function(req,res,next){
                 }
             })
         }
-    })});
+    })
+});
 
 
 /*

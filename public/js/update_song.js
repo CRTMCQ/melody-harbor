@@ -12,7 +12,6 @@ updateSongForm.addEventListener("submit", function (e) {
     let inputSong = document.getElementById("update-song");
     let inputTitle = document.getElementById("update-title");
     let inputAlbum = document.getElementById("update-album");
-    let inputArtist = document.getElementById("update-artist");
     let inputStreamCt = document.getElementById("update-streamCt");
     let inputGenre = document.getElementById("update-genre");
     let inputKeySig = document.getElementById("update-keySignature");
@@ -26,7 +25,6 @@ updateSongForm.addEventListener("submit", function (e) {
     let songVal = inputSong.value;
     let titleVal = inputTitle.value;
     let albumVal = inputAlbum.value;
-    let artistVal = inputArtist.value;
     let streamVal = inputStreamCt.value;
     let genreVal = inputGenre.value;
     let keyVal = inputKeySig.value;

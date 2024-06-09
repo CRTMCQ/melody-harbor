@@ -3,7 +3,7 @@
 // Citation for the following code: app.js, db-connector.js, views/, public/js/
 // Date: 5/23/2024
 // Adapted from: CS340 nodejs-starter-app 
-// The starter app code was used as a basis for development, and adapted to better fit the melody-harbor database
+// The starter app code was used as a basis for development and adapted to better fit the Melody Harbor database + UI
 // Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app
 
 /*
@@ -65,8 +65,7 @@ app.post('/add-label-form', function(req, res)
                     console.log(error)
                     res.sendStatus(400);
                 }
-                // If there was no error, we redirect back to our root route, which automatically runs the SELECT * FROM bsg_people and
-                // presents it on the screen
+                // If there was no error, we redirect back to our root route, which automatically runs the SELECT query for table display
                 else
                 {
                     res.redirect('/labels');
@@ -118,7 +117,7 @@ app.get('/artists', function(req, res)
                     labelmap[id] = label["name"];
                 })
 
-                // Overwrite the homeworld ID with the name of the planet in the people object
+                // Replaces labelID value with the label.name value
                 artists = artists.map(artist => {
                     return Object.assign(artist, {labelID: labelmap[artist.labelID]})
                 })
@@ -154,8 +153,7 @@ app.post('/add-artist-form', function(req, res)
                     res.sendStatus(400);
                 }
 
-                // If there was no error, we redirect back to our root route, which automatically runs the SELECT * FROM bsg_people and
-                // presents it on the screen
+                // If there was no error, we redirect back to our root route, which automatically runs the SELECT query for table display
                 else
                 {
                     res.redirect('/artists');
@@ -193,7 +191,7 @@ app.get('/albums', function(req, res)
     // Run the 1st query
     db.pool.query(query1, function(error, rows, fields){
     
-        // Save the people
+        // Save the albums
         let albums = rows;
         
         // Run the second query
@@ -239,8 +237,7 @@ app.post('/add-album-form', function(req, res)
                     res.sendStatus(400);
                 }
 
-                // If there was no error, we redirect back to our root route, which automatically runs the SELECT * FROM bsg_people and
-                // presents it on the screen
+                // If there was no error, we redirect back to our root route, which automatically runs the SELECT query for table display
                 else
                 {
                     res.redirect('/albums');

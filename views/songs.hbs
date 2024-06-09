@@ -44,11 +44,11 @@
     <form id="add-song-form" method="POST" action="/add-song-form">
         <table class="form">
             <tr>
-                <td>*Title:</td>
+                <td>Title:</td>
                 <td><input type="text" name="input-name"></td>
             </tr>
             <tr>
-                <td>*Album:</td>
+                <td>Album:</td>
                 <td><select name="input-album" id="input-album-ajax">
                     <option value="">Select an Album</option>
                     {{#each albums}}
@@ -57,7 +57,7 @@
                 </select></td>
             </tr>
             <tr>
-                <td>*Artist(s):</td>
+                <td>Artist(s):</td>
                 <td><select name="input-artist" id="input-artist-ajax">
                     <option value="">Select an Artist</option>
                     {{#each artists}}
@@ -66,27 +66,27 @@
                 </select></td>
             </tr>
             <tr>
-                <td>*Stream Count:</td>
+                <td>Stream Count:</td>
                 <td><input type="number" name="input-streamCt"></td>
             </tr>
             <tr>
-                <td>*Genre:</td>
+                <td>Genre:</td>
                 <td><input type="text" name="input-genre"></td>
             </tr>
             <tr>
-                <td>*Key Signature:</td>
+                <td>Key Signature:</td>
                 <td><input type="text" name="input-keySignature"></td>
             </tr>
             <tr>
-                <td>*Chord Progression(s):</td>
+                <td>Chord Progression(s):</td>
                 <td><textarea name="input-chordProgression"></textarea></td>
             </tr>
             <tr>
-                <td>*Low Vocal Range:</td>
+                <td>Low Vocal Range:</td>
                 <td><input type="number" name="input-lowRange"></td>
             </tr>
             <tr>
-                <td>*High Vocal Range:</td>
+                <td>High Vocal Range:</td>
                 <td><input type="number" name="input-highRange"></td>
             </tr>
             <tr>

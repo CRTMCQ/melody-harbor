@@ -24,7 +24,7 @@ CREATE OR REPLACE Table Artists (
 	name varchar(50) NOT NULL,
 	listenerCt int,
 	cityOfOrigin varchar(30),
-	labelID int,
+	labelID int DEFAULT NULL,
 	PRIMARY KEY (artistID),
 	FOREIGN KEY (labelID) REFERENCES RecordLabels(labelID)
 	ON DELETE SET NULL
@@ -73,8 +73,7 @@ CREATE OR REPLACE Table SongArtists (
 ----------------------------------
 
 INSERT INTO RecordLabels (name, location)
-VALUES ('Independent','N/A'),
-('Dreamville','New York City, New York'),
+VALUES ('Dreamville','New York City, New York'),
 ('pgLang','Los Angeles, California'),
 ('88rising','Los Angeles, California'),
 ('Fiction Records','United Kingdom');
@@ -86,7 +85,7 @@ VALUES ('JID',24990531,'Atlanta, Georgia',(SELECT labelID FROM RecordLabels WHER
 ('J. Cole',43895498,'Fayetteville, North Carolina',(SELECT labelID FROM RecordLabels WHERE name = 'Dreamville')),
 ('Joji',19767425,'Higashinada-ku, Kobe, Japan',(SELECT labelID FROM RecordLabels WHERE name = '88rising')),
 ('Palace',1929362,'London, United Kingdom',(SELECT labelID FROM RecordLabels WHERE name = 'Fiction Records')),
-('Magpie Jay',26991,'San Jose, Costa Rica',(SELECT labelID FROM RecordLabels WHERE name = 'Independent'));
+('Magpie Jay',26991,'San Jose, Costa Rica',NULL);
 
 INSERT INTO Albums (title, genre, artistID)
 VALUES ('2014 Forest Hills Drive','Hip Hop',(SELECT artistID FROM Artists WHERE name = 'J. Cole')),

@@ -52,9 +52,10 @@ app.post('/add-label-form', function(req, res)
         // Capture the incoming data and parse it back to a JS object
         let data = req.body;
 
-        if (data['input-name'] && data['input-location'])
+        if (data['input-name'] == ""){res.redirect('/labels')}
+        else{
             // Create the query and run it on the database
-            query1 = `INSERT INTO RecordLabels (name, location) VALUES ('${data['input-name']}','${data['input-location']}')`;
+            query1 = `INSERT INTO RecordLabels (name, location) VALUES ('${data['input-name']}','${data["input-location"]}')`;
             db.pool.query(query1, function(error, rows, fields){
 
                 // Check to see if there was an error
@@ -71,6 +72,7 @@ app.post('/add-label-form', function(req, res)
                     res.redirect('/labels');
                 }
             })
+        }
     })
 
 app.delete('/delete-label-ajax/', function(req,res,next){
@@ -132,31 +134,33 @@ app.post('/add-artist-form', function(req, res)
         let data = req.body;
 
         // Capture NULL values
-        let location = parseInt(data['input-location']);
-        if (isNaN(location))
-        {
-            location = 'NULL'
-        }
+        let listenerCt = parseInt(data['input-listenerCt']);
+        if (isNaN(listenerCt)) {listenerCt = 'NULL'}
+
+        let label = parseInt(data['input-label']);
+        if (isNaN(label)) {label = 'NULL'}
 
         // Create the query and run it on the database
-        query1 = `INSERT INTO Artists (name, listenerCt, cityOfOrigin, labelID) VALUES ('${data['input-name']}', '${data['input-listenerCt']}', '${data['input-cityOfOrigin']}', '${data['input-label']}')`;
-        db.pool.query(query1, function(error, rows, fields){
+        if (data['input-name'] == '') {res.redirect('/artists')}
+        else{
+            query1 = `INSERT INTO Artists (name, listenerCt, cityOfOrigin, labelID) VALUES ('${data['input-name']}', ${listenerCt}, '${data['input-cityOfOrigin']}', ${label})`;
+            db.pool.query(query1, function(error, rows, fields){
 
-            // Check to see if there was an error
-            if (error) {
+                // Check to see if there was an error
+                if (error) {
 
-                // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
-                console.log(error)
-                res.sendStatus(400);
-            }
+                    // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                    console.log(error)
+                    res.sendStatus(400);
+                }
 
-            // If there was no error, we redirect back to our root route, which automatically runs the SELECT * FROM bsg_people and
-            // presents it on the screen
-            else
-            {
-                res.redirect('/artists');
-            }
-        })
+                // If there was no error, we redirect back to our root route, which automatically runs the SELECT * FROM bsg_people and
+                // presents it on the screen
+                else
+                {
+                    res.redirect('/artists');
+                }
+            })}
     })
 
 app.delete('/delete-artist-ajax/', function(req,res,next){
@@ -217,27 +221,31 @@ app.post('/add-album-form', function(req, res)
         // Capture the incoming data and parse it back to a JS object
         let data = req.body;
 
-
+        // Capture NULL values
+        let artist = parseInt(data['input-artist']);
+        if (isNaN(artist)) {artist = 'NULL'}
 
         // Create the query and run it on the database
-        query1 = `INSERT INTO Albums (title, genre, artistID) VALUES ('${data['input-title']}', '${data['input-genre']}', '${data['input-artist']}')`;
-        db.pool.query(query1, function(error, rows, fields){
+        if (data['input-title'] == '') {res.redirect('/albums')}
+        else
+            query1 = `INSERT INTO Albums (title, genre, artistID) VALUES ('${data['input-title']}', '${data['input-genre']}', ${artist})`;
+            db.pool.query(query1, function(error, rows, fields){
 
-            // Check to see if there was an error
-            if (error) {
+                // Check to see if there was an error
+                if (error) {
 
-                // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
-                console.log(error)
-                res.sendStatus(400);
-            }
+                    // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                    console.log(error)
+                    res.sendStatus(400);
+                }
 
-            // If there was no error, we redirect back to our root route, which automatically runs the SELECT * FROM bsg_people and
-            // presents it on the screen
-            else
-            {
-                res.redirect('/albums');
-            }
-        })
+                // If there was no error, we redirect back to our root route, which automatically runs the SELECT * FROM bsg_people and
+                // presents it on the screen
+                else
+                {
+                    res.redirect('/albums');
+                }
+            })
     })
 
 app.delete('/delete-album-ajax/', function(req,res,next){
@@ -302,40 +310,55 @@ app.post('/add-song-form', function(req, res)
         let data = req.body;
 
         // Capture NULL values
+        let album = parseInt(data['input-album']);
+        if (isNaN(album)) {album = 'NULL'}
+
+        let streamCt = parseInt(data['input-streamCt']);
+        if (isNaN(streamCt)) {streamCt = 'NULL'}
+
+        let lowRange = parseInt(data['input-lowRange']);
+        if (isNaN(lowRange)) {lowRange = 'NULL'}
+
+        let highRange = parseInt(data['input-highRange']);
+        if (isNaN(highRange)) {highRange = 'NULL'}
 
         // Create the query and run it on the database
-        query1 = `INSERT INTO Songs (name, albumID, streamCt, genre, keySignature, chordProgression, lowRange, highRange, lyrics) VALUES ('${data['input-name']}', '${data['input-album']}', ${data['input-streamCt']}, '${data['input-genre']}', '${data['input-keySignature']}', '${data['input-chordProgression']}', ${data['input-lowRange']}, ${data['input-highRange']}, '${data['input-lyrics']}')`;
-        query2 = `INSERT INTO SongArtists (songID, artistID) VALUES ((SELECT MAX(songID) FROM Songs), '${data['input-artist']}')`;
+        if (data['input-name'] == '') {res.redirect('/songs')}
+        else {
+            query1 = `INSERT INTO Songs (name, albumID, streamCt, genre, keySignature, chordProgression, lowRange, highRange, lyrics) VALUES ('${data['input-name']}', ${album}, ${streamCt}, '${data['input-genre']}', '${data['input-keySignature']}', '${data['input-chordProgression']}', ${lowRange}, ${highRange}, '${data['input-lyrics']}')`;
+            query2 = `INSERT INTO SongArtists (songID, artistID) VALUES ((SELECT MAX(songID) FROM Songs), '${data['input-artist']}')`;
 
-        db.pool.query(query1, function(error, rows, fields){
+            db.pool.query(query1, function(error, rows, fields){
 
-            // Check to see if there was an error
-            if (error) {
+                // Check to see if there was an error
+                if (error) {
 
-                // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
-                console.log(error)
-                res.sendStatus(400);
-            }
+                    // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                    console.log(error)
+                    res.sendStatus(400);
+                }
 
-            else
-            {
-                db.pool.query(query2, function(error, rows, fields){
+                else
+                {
+                    if (data['input-artist'] == '') {res.redirect('/songs')}
+                    else {
+                        db.pool.query(query2, function(error, rows, fields){
 
-                    // Check to see if there was an error
-                    if (error) {
-        
-                        // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
-                        console.log(error)
-                        res.sendStatus(400);
-                    }
-        
-                    else
-                    {
-                        res.redirect('/songs');
-                    }
-                })
-            }
-        })
+                            // Check to see if there was an error
+                            if (error) {
+                
+                                // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                                console.log(error)
+                                res.sendStatus(400);
+                            }
+                
+                            else
+                            {
+                                res.redirect('/songs');
+                            }
+                        })}
+                }
+            })}
     })
 
 
@@ -413,22 +436,37 @@ app.get('/updatesongs', function(req, res)
 
 app.put('/put-song-ajax', function(req,res,next){
     let data = req.body;
+
+    // Capture NULL values
+    let album = parseInt(data.albumID);
+    if (isNaN(album)) {album = 'NULL'}
+
+    let streamCt = parseInt(data.streamCt);
+    if (isNaN(streamCt)) {streamCt = 'NULL'}
+
+    let lowRange = parseInt(data.lowRange);
+    if (isNaN(lowRange)) {lowRange = 'NULL'}
+
+    let highRange = parseInt(data.highRange);
+    if (isNaN(highRange)) {highRange = 'NULL'}
+
+    if (data.name == ""){res.sendStatus(200)}
+    else {
     
-    let queryUpdateSong = `UPDATE Songs SET name = ?, streamCt = ?, genre = ?, keySignature = ?, chordProgression = ?, lowRange = ?, highRange = ?, albumID = ?, lyrics = ? WHERE songID = ?;`;
+        let queryUpdateSong = `UPDATE Songs SET name = ?, streamCt = ${streamCt}, genre = ?, keySignature = ?, chordProgression = ?, lowRange = ${lowRange}, highRange = ${highRange}, albumID = ${album}, lyrics = ? WHERE songID = ?;`;
 
-    // Run the 1st query
-    db.pool.query(queryUpdateSong, [data.name, data.streamCt, data.genre, data.keySignature, data.chordProgression, data.lowRange, data.highRange, data.albumID, data.lyrics, data.songID], function(error, rows, fields){
+        db.pool.query(queryUpdateSong, [data.name, data.genre, data.keySignature, data.chordProgression, data.lyrics, data.songID], function(error, rows, fields){
 
-        if (error) {
-            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
-            console.log(error);
-            res.sendStatus(400);
-        }
-        else {
-            res.sendStatus(200);
-        }
+            if (error) {
+                // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                console.log(error);
+                res.sendStatus(400);
+            }
+            else {
+                res.sendStatus(200);
+            }
 
-    });
+        })}
 });
 
 
@@ -487,25 +525,25 @@ app.post('/add-songartist-form', function(req, res)
     // Capture the incoming data and parse it back to a JS object
     let data = req.body;
 
-    // Capture NULL values
-
     // Create the query and run it on the database
-    query1 = `INSERT INTO SongArtists (songID, artistID) VALUES ('${data['input-song']}', '${data['input-artist']}')`;
+    if (data['input-song'] == '' || data['input-artist'] == '') {res.redirect('/songartists')}
+    else {
+        query1 = `INSERT INTO SongArtists (songID, artistID) VALUES ('${data['input-song']}', '${data['input-artist']}')`;
 
-    db.pool.query(query1, function(error, rows, fields){
+        db.pool.query(query1, function(error, rows, fields){
 
-        // Check to see if there was an error
-        if (error) {
+            // Check to see if there was an error
+            if (error) {
 
-            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
-            console.log(error)
-            res.sendStatus(400);
-        }
-        else
-        {
-            res.redirect('/songartists');
-        }
-    })
+                // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                console.log(error)
+                res.sendStatus(400);
+            }
+            else
+            {
+                res.redirect('/songartists');
+            }
+        })}
 })
 
 app.delete('/delete-songartist-ajax/', function(req,res,next){

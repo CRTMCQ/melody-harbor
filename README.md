@@ -1,6 +1,6 @@
 # Source Citation
 
-Citation for the following code: app.js, db-connector.js, views/, public/js/
+Citation for the following code: app.js, db-connector.js, views/\*, public/js/\*
 
 Date: 6/8/2024
 

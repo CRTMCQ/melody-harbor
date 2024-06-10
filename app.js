@@ -1,5 +1,3 @@
-// App.js
-
 // Citation for the following code: app.js, db-connector.js, views/, public/js/
 // Date: 5/23/2024
 // Adapted from: CS340 nodejs-starter-app 

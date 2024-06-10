@@ -1,4 +1,10 @@
+// Citation for the following code:
+// Date: 5/23/2024
+// Adapted from: CS340 nodejs-starter-app 
+// Structure and logic from the starter app code was used as a base and altered to better fit the Melody Harbor database + UI
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app
 // Get the objects we need to modify
+
 let updateSongForm = document.getElementById('update-song-form-ajax');
 
 // Modify the objects we need
